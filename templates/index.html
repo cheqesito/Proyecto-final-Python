@@ -1,0 +1,153 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>
+            {% block title %}
+            Tech Blog
+            {% endblock title %}
+        </title>
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href={%static 'css/styles.css'%} rel="stylesheet" />
+        
+        {% block block_head %}{% endblock block_head %}
+
+        
+    </head>
+     <body id="page-top">
+        <!-- Navbar -->
+        {%block navbar_block%}
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top " id="mainNav">
+        {%endblock navbar_block%}
+            <div class="container">
+                <a class="navbar-brand" href={%url 'index'%}><img src={%static "/img/iconhome.svg"%} alt="..." /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars ms-1"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav text-uppercase ms-auto py-4 py-lg-0"> 
+                        <li class="nav-item"><a class="nav-link" href={% url 'post:list' %}>Posts</a></li>
+                        <li class="nav-item"><a class="nav-link" href={% url 'post:list_categoria'%}>Categorias</a></li>
+                        {% if not user.is_authenticated %}  
+                            <li class="nav-item"><a class="nav-link" href={% url 'user:login' %}>Iniciar sesión</a></li>
+                            <li class="nav-item"><a class="nav-link" href={% url 'user:register' %}>Registrarse</a></li>
+                        {% endif %}
+                        <li class="nav-item"><a class="nav-link " href={%url 'about'%}>Acerca de mí</a></li>
+                        {% if user.is_authenticated %}  
+                            <li class="nav-item"><a class="nav-link" href={% url 'user:logout' %}>Cerrar sesión</a></li>
+                            <li class="nav-item"><a class="nav-link" href={% url 'user:detail_profile' user.profile.id%}>@{{user.username}}</a></li>
+                            {% if user.profile.avatar %}
+                                <img class="rounded-circle border border-warning" src={{user.profile.avatar.url}} alt="..." height="38" width="38" />
+                            {% else %}
+                                <img class="rounded-circle border border-warning" src="{% static 'img/default_profile.svg' %}"alt="..." height="38" width="38" />                            
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {%block body_block%}
+
+        <!-- Masthead-->
+        <header class="masthead">
+            <div class="container">
+                <div class="masthead-subheading">Bienvenido!</div>
+                <div class="masthead-heading text-uppercase">Tech Blog</div>
+                {% comment %} <a class="btn btn-primary btn-xl text-uppercase" href="#!">Más sobre el blog</a> {% endcomment %}
+            </div>
+        </header>
+        <!-- Messages-->
+        <div class="container text-center">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}}">
+                        {{ message }}
+                    </div>
+                 {% endfor %}
+            {% endif%}
+         </div> 
+
+        <!-- Publicaciones recientes-->
+        <section class="page-section bg-light" id="portfolio">
+            <div class="container">
+                <div class="text-center">
+                    <h2 class="section-heading text-uppercase">Publicaciones recientes</h2>
+                    <br>
+                    {% comment %} <h3 class="..Un subtitulo...</h3> {% endcomment %}
+                    <hr>
+                    <br>
+                </div>
+
+                <div class="row">
+                    {% if ultimos_post %}
+                        {% for post in ultimos_post  %}
+                            <div class="col-lg-4 col-sm-6 mb-4 mb-sm-0-lg-0">
+                                <div class="portfolio-item">
+                                    <a class="portfolio-link" href={% url 'post:detail' post.id %}>
+                                        <div class="portfolio-hover">
+                                            <div class="portfolio-hover-content"><i class="fas fa-plus fa-3x"></i></div>
+                                        </div>
+                                        {% if post.content_image %}
+                                            <img class="card-img" src={{post.content_image.url}} alt="..." width="600" height="350"/>
+                                        {% else %}
+                                            <img class="card-img" src="{% static 'img/default_profile.svg' %}"alt="..." width="600" height="350"/>
+                                        {% endif %}
+                                    </a>
+                                    <div class="portfolio-caption">
+                                        <div class="portfolio-caption-heading">{{post.title}}</div>
+                                        <div class="portfolio-caption-subheading text-muted">@{{post.author.username}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %} 
+                    {% else %}
+                        <div class="text-center">
+                            <h4>No hay registros de Posts</h4>
+                            <br>
+                        </div>
+                    {% endif %}
+                </div>
+            </section>
+        
+        {%endblock body_block%}
+
+        <!-- Footer-->
+        <footer class="footer py-4">
+            <div class="container">
+                <div class="row align-items-center">
+                    {% comment %} <div class="col-lg-4 text-lg-start">Copyright &copy; Your Website 2022</div>
+                    <div class="col-lg-4 my-3 my-lg-0"> {% endcomment %}
+                    {% block footer_block%}
+                        <div class="text-center">
+                            - TECH BLOG -
+                        </div> 
+                    {% endblock footer_block %}
+                    {% comment %} <div class="col-lg-4 text-lg-end">
+                        <a class="link-dark text-decoration-none me-3" href="#!">Privacy Policy</a>
+                        <a class="link-dark text-decoration-none" href="#!">Terms of Use</a>
+                    </div> {% endcomment %}
+                </div>
+            </div>
+        </footer>
+       
+
+        {%block js_block%}
+            <!-- Bootstrap core JS-->
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+            <!-- Core theme JS-->
+            <script src={%static "js/scripts.js"%}></script>
+            <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> 
+        {%endblock js_block%}
+    </body>
+</html>

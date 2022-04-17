@@ -1,0 +1,79 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    Perfil de usuario
+{% endblock title %}
+
+{%block navbar_block%}
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-shrink" id="mainNav">   
+{%endblock navbar_block%}
+
+{% block body_block%}
+    <br>
+    <div class="container">
+        <div class="card mb-3">
+            <div class="d-flex justify-content-between align-items-center mx-3 mt-3">
+                <h2>Mi perfil</h2>
+                <div class="btn-group" role="group">
+                    {% if user.id == profile.user.id %}
+                        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Editar <i class="fas fa-user-edit"></i></button>
+                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                        <li><a class="dropdown-item" href={% url 'user:edit_profile' page_user.user.id %}>Editar Perfil</a></li>
+                        <li><a class="dropdown-item" href={% url 'user:edit_user'%}>Editar datos personales</a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+                {% comment %} <a class="btn btn-primary btn-sm " href={% url 'user:edit_profile' page_user.user.id %}>Editar Perfil <i class="fas fa-user-edit"></i></a> {% endcomment %}
+            </div>
+            {% comment %} <p align="right" class="mb-0">
+                <a class="btn btn-primary btn-sm" href={% url 'user:edit_user'%}>Editar datos personales <i class="fas fa-user-edit"></i></a>
+            </p> {% endcomment %}
+            
+            <hr>
+            <div class="row no-gutters">
+                <div class="col-md-2">
+                    <br>
+                    {% if page_user.avatar %}
+                            <img src="{{ page_user.avatar.url}}" class="card-img mx-3">                       
+                    {% else %}
+                        <img src="{% static 'img/default_profile.svg' %}" class="card-img mx-3">
+                    {% endif %}
+                </div>
+                <div class="col-md-10 col-md-offset-2">
+                    <div class="card-body">
+                        <h5 class="card-title" >
+                            {{ page_user.user.first_name }}
+                            {{ page_user.user.last_name}}
+                        </h5>
+                        <p class="small text-muted">
+                            {% if page_user.website_url %}
+                                <a href="{{page_user.website_url}}">Website</a>
+                            {% endif %} 
+                        <p class="card-text">
+                            {{ page_user.biography|safe }}
+                            <br>
+                            <div class="list-group" style="width: 500px">
+                                <div class="list-group-item list-group-item-action active">
+                                    <strong>Mis Posts: @{{ page_user.user.username }}</strong>
+                                </div>
+                                {% if mis_posts %}
+                                    {% for post in mis_posts  %}
+                                        <a class="list-group-item list-group-item-action" href="{% url 'post:detail' post.id %}"> <strong>{{post.title}}</strong>- {{post.category}} - {{post.publish_date|date:'d/m/Y'}} </a>
+                                    {%endfor %}
+                                {% else %}
+                                    <a class="list-group-item list-group-item-action"> Sin posts registrados. </a>
+                                {% endif %}
+                              </div>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+
+{%endblock body_block%}
+
+{%block js_block%}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script> 
+{%endblock js_block%}

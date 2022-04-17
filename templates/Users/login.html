@@ -1,0 +1,86 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}
+    Iniciar sesión
+{% endblock title %}
+
+{% block block_head %}
+    <link href={%static "css/signin.css"%} rel="stylesheet">
+{% endblock block_head %}
+    
+{% block body_block%}
+    {% comment %} {% if messages %}
+        <div class="container text-center">
+            <br><br><br>
+            {% for message in messages %}
+                <div class="alert alert-{{message.tags}}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div> 
+    {% endif%} {% endcomment %}
+    <body class="text-center">   
+        <br><br>
+        <br><br>
+        <br><br> 
+        {% if messages %}
+            <div class="container text-center" style="max-width: 350px">
+                {% comment %} <br><br><br> {% endcomment %}
+                {% for message in messages %}
+                    <div class="alert alert-{{message.tags}}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div> 
+        {% endif%}
+        <main class="form-signin">
+        <form method="post" action="">
+            {% csrf_token %} 
+            <img class="mb-4" src={%static "img/login.svg"%} alt="" width="102" height="87">
+            <h1>Iniciar Sesión</h1>
+            <hr><br>
+            <div class="form-floating">
+                <input type="text" class="form-control" name="username" placeholder="Usuario" value="" required>
+                <label for="floatingInput">Usuario</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="password" placeholder="Contraseña" value="" required>
+                <label for="floatingPassword">Contraseña</label>
+            </div>
+            <br>
+            {% comment %} <div class="checkbox mb-3">
+                <label>
+                    <input type="checkbox" value="remember-me"> Recordarme
+                </label>
+            </div> {% endcomment %}
+
+
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Ingresar </button>
+        </form>
+        <br>
+            <a class="w-100 btn btn-lg btn-secondary" href={% url 'user:register' %}>Registrarse </a> 
+            {% if form.errors %}
+                <br><br>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                    {{ error.message }}
+                    <div class="alert alert-danger">{{ error|escape }}</div>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <div class="alert alert-danger">{{ error|escape }}</div>
+                {% endfor %}
+            {% endif %} 
+        </main>
+    </body>
+
+{% endblock body_block%}
+
+{% block footer_block%}
+    <!-- Footer-->
+    <div class="text-center" style="color:#ffff">
+        - TECH BLOG -
+    </div>
+{% endblock footer_block %}

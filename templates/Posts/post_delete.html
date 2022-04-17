@@ -1,0 +1,25 @@
+{% extends 'Posts/post_list.html' %}
+{% block title %}
+    Post delate
+{% endblock title %}
+
+{% block body_block%}
+    <br>
+    <div class="container">
+        {% if user.is_authenticated %}
+            <h3 class="mb-3" style="text-align:center">¿Esta seguro que quiere eliminar el post: "{{post.title}}"?</h3>
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form}}
+                <br>
+                <div style="text-align:center">
+                    <button type="submit" class="btn btn-danger">Eliminar <i class='fas fa-trash'></i></button>       
+                    <a class="btn btn-primary" href="{% url 'post:list'%}"> Salir sin guardar </a>
+                </div>
+            </form>
+        {% else %}
+            <h2>Necesita permiso para acceder.</h2>
+        {% endif %} 
+    </div>
+
+{%endblock body_block%}
